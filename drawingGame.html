@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        canvas {
+            border: 1px solid #d3d3d3;
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+
+<body onload="startDrawing()">
+    <script>
+        var pen;
+        function startDrawing() {
+            myGameArea.start();
+            pen = new component(10, 'red', myGameArea.x, myGameArea.y);
+        }
+        var myGameArea = {
+            canvas: document.createElement("canvas"),
+            start: function () {
+                this.canvas.width = 850;
+                this.canvas.height = 500;
+                this.context = this.canvas.getContext("2d");
+                document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+                this.interval = setInterval(updateGameArea, 0.);
+                window.addEventListener('keydown', function (e) {
+                    myGameArea.key = e.keyCode;
+                });
+                window.addEventListener('keyup', function (e) {
+                    myGameArea.key = false;
+                })
+                window.addEventListener('mousemove', function (e) {
+                    myGameArea.x = e.pageX;
+                    myGameArea.y = e.pageY;
+                });
+            },
+            clear: function () {
+                this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            }
+        }
+        function component(radius, color, x, y) {
+            this.radius = radius;
+            this.x = x;
+            this.y = y;
+            this.color = color;
+            this.update = function () {
+                ctx = myGameArea.context;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+
+
+        }
+        function updateGameArea() {
+            if (myGameArea.key && myGameArea.key == 38) {
+                // up arrow
+                pen.radius += 0.05;
+            }
+            if (myGameArea.key && myGameArea.key == 40) {
+                // down arrow
+                if (pen.radius >= 1) {
+                    pen.radius -= 0.05;
+                }
+            }
+            if (myGameArea.key && myGameArea.key == 66) {
+                // b
+                pen.color = 'blue';
+            }
+            if (myGameArea.key && myGameArea.key == 71) {
+                // g
+                pen.color = 'green';
+            }
+            if (myGameArea.key && myGameArea.key == 82) {
+                // r
+                pen.color = 'red';
+            }
+            if (myGameArea.key && myGameArea.key == 89) {
+                // y
+                pen.color = 'yellow';
+            }
+            if (myGameArea.key && myGameArea.key == 32) {
+                myGameArea.clear();
+            }
+            pen.x = myGameArea.x;
+            pen.y = myGameArea.y;
+            pen.update();
+        }
+    </script>
+    <p>Start to Draw!!!</p>
+</body>
+
+</html>
